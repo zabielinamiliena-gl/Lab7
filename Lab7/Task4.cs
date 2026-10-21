@@ -68,7 +68,7 @@ namespace Variant1_SmartHomeDevices
             device.SetBrightness(70);
         }
     }
-
+    //da
     public class KitchenClient
     {
         public void Run(ICoffeeBrewing device)
