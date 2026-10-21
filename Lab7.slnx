@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="Lab7/Task4.csproj" />
+  <Project Path="Lab7/Task4.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="Task5/Task5.csproj" />
 </Solution>
