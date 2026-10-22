@@ -2,5 +2,8 @@
   <Project Path="Lab7/Task4.csproj">
     <Build Solution="Debug|*" Project="false" />
   </Project>
+  <Project Path="Task1_SRP/Task1_SRP.csproj" />
+  <Project Path="Task2_OCP/Task2_OCP.csproj" />
+  <Project Path="Task3_LSP/Task3_LSP.csproj" Id="57e7d05f-77c3-41ce-9231-b2c5497b490c" />
   <Project Path="Task5/Task5.csproj" />
 </Solution>

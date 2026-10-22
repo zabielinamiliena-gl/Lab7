@@ -17,8 +17,6 @@ namespace Variant1_PaymentProcessing
         bool ProcessPayment(PaymentRequest request);
     }
 
-
-    // Кредитна картка
     public class CreditCardPaymentStrategy : IPaymentStrategy
     {
         public string SystemName => "CreditCard";
