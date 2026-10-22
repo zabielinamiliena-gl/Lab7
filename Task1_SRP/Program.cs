@@ -6,7 +6,6 @@ using System.Text;
 
 namespace Variant1_OrderProcessing
 {
-    // --- 1. Сутності доменної моделі ---
 
     public class OrderItem
     {
@@ -24,9 +23,6 @@ namespace Variant1_OrderProcessing
         public decimal TotalAmount { get; set; }
     }
 
-    // --- 2. Виділені класи-сервіси (SRP / ISP) ---
-
-    // 2.1. Валідація
     public interface IOrderValidator
     {
         void Validate(string customerEmail, List<OrderItem> items);
@@ -56,7 +52,6 @@ namespace Variant1_OrderProcessing
         }
     }
 
-    // 2.2. Калькулятор цін, знижок та податків
     public interface IPricingCalculator
     {
         OrderCalculationResult Calculate(List<OrderItem> items, string customerCategory);
@@ -66,7 +61,7 @@ namespace Variant1_OrderProcessing
     {
         public OrderCalculationResult Calculate(List<OrderItem> items, string customerCategory)
         {
-            decimal subtotal = 0;                               //Порахувати базову суму товарів
+            decimal subtotal = 0;                              
             foreach (var item in items)
             {
                 subtotal += item.Price * item.Quantity;
@@ -79,7 +74,7 @@ namespace Variant1_OrderProcessing
                 _ => 0m
             };
 
-            decimal discountAmount = subtotal * discountRate;           //Визначити відсоток знижки
+            decimal discountAmount = subtotal * discountRate;           
             decimal taxAmount = (subtotal - discountAmount) * 0.20m;
             decimal totalAmount = subtotal - discountAmount + taxAmount;
 
@@ -93,7 +88,6 @@ namespace Variant1_OrderProcessing
         }
     }
 
-    // 2.3. Генератор HTML-рахунків
     public interface IInvoiceGenerator
     {
         string GenerateHtmlInvoice(string customerEmail, string deliveryAddress, List<OrderItem> items, string customerCategory, OrderCalculationResult calculation);
@@ -103,7 +97,7 @@ namespace Variant1_OrderProcessing
     {
         public string GenerateHtmlInvoice(string customerEmail, string deliveryAddress, List<OrderItem> items, string customerCategory, OrderCalculationResult calculation)
         {
-            var sb = new StringBuilder();               //інструмент для швидкого збирання великих текстів.
+            var sb = new StringBuilder();              
             sb.AppendLine("<html><body>");         
             sb.AppendLine($"<h1>Рахунок на замовлення для {customerEmail}</h1>");   
             sb.AppendLine($"<p>Адреса доставки: {deliveryAddress}</p>");
@@ -125,7 +119,6 @@ namespace Variant1_OrderProcessing
         }
     }
 
-    // 2.4. Сховище даних (База даних / Файл)
     public interface IOrderRepository
     {
         void SaveOrder(string customerEmail, decimal totalAmount, string deliveryAddress);
@@ -133,7 +126,7 @@ namespace Variant1_OrderProcessing
 
     public class FileOrderRepository : IOrderRepository
     {
-        private readonly string _filePath;          //приватне поле для збереження шляху/назви файлу:
+        private readonly string _filePath;   
 
         public FileOrderRepository(string filePath = "orders_db.txt")
         {
@@ -147,7 +140,6 @@ namespace Variant1_OrderProcessing
         }
     }
 
-    // 2.5. Сповіщення покупця
     public interface INotificationService
     {
         void SendNotification(string recipientEmail, string subject, string bodyHtml);
@@ -168,7 +160,7 @@ namespace Variant1_OrderProcessing
         {
             try
             {
-                using var client = new SmtpClient(_smtpHost, _smtpPort);                    //готовий клас у C# який вміє з'єднуватися з поштовим сервером по мережі.
+                using var client = new SmtpClient(_smtpHost, _smtpPort);                    
                 var mail = new MailMessage("noreply@store.local", recipientEmail)
                 {
                     Subject = subject,
@@ -184,11 +176,10 @@ namespace Variant1_OrderProcessing
         }
     }
 
-    // --- 3. Клас-оркестратор ---
 
     public class OrderProcessor
     {
-        private readonly IOrderValidator _validator;                                                                //приймає вже готові екземпляри всіх 5 сервісів і зберігає їх у свої приватні поля
+        private readonly IOrderValidator _validator;                                                               
         private readonly IPricingCalculator _calculator;
         private readonly IInvoiceGenerator _invoiceGenerator;
         private readonly IOrderRepository _repository;
@@ -227,7 +218,6 @@ namespace Variant1_OrderProcessing
         }
     }
 
-    // --- 4. Точка входу в програму ---
 
     internal class Program
     {
@@ -235,16 +225,14 @@ namespace Variant1_OrderProcessing
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            IOrderValidator validator = new OrderValidator();           //ств сервісів
+            IOrderValidator validator = new OrderValidator();          
             IPricingCalculator calculator = new PricingCalculator();
             IInvoiceGenerator invoiceGenerator = new HtmlInvoiceGenerator();
             IOrderRepository repository = new FileOrderRepository();
             INotificationService notificationService = new EmailNotificationService();
 
-            // Створення оркестратора
             var processor = new OrderProcessor(validator, calculator, invoiceGenerator, repository, notificationService);
 
-            // Тестові дані
             var items = new List<OrderItem>
             {
                 new OrderItem { ItemId = "A101", Name = "Смартфон", Price = 12000m, Quantity = 1 },
