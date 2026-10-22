@@ -6,7 +6,6 @@ using System.Text;
 
 namespace Variant1_OrderProcessing
 {
-    // --- 1. Сутності доменної моделі ---
 
     public class OrderItem
     {
@@ -98,7 +97,7 @@ namespace Variant1_OrderProcessing
     {
         public string GenerateHtmlInvoice(string customerEmail, string deliveryAddress, List<OrderItem> items, string customerCategory, OrderCalculationResult calculation)
         {
-            var sb = new StringBuilder();               //інструмент для швидкого збирання великих текстів.
+            var sb = new StringBuilder();          
             sb.AppendLine("<html><body>");         
             sb.AppendLine($"<h1>Рахунок на замовлення для {customerEmail}</h1>");   
             sb.AppendLine($"<p>Адреса доставки: {deliveryAddress}</p>");
@@ -120,7 +119,6 @@ namespace Variant1_OrderProcessing
         }
     }
 
-    // 2.4. Сховище даних (База даних / Файл)
     public interface IOrderRepository
     {
         void SaveOrder(string customerEmail, decimal totalAmount, string deliveryAddress);
@@ -178,8 +176,6 @@ namespace Variant1_OrderProcessing
         }
     }
 
-    // --- 3. Клас-оркестратор ---
-
     public class OrderProcessor
     {
         private readonly IOrderValidator _validator;                                                               
@@ -223,7 +219,7 @@ namespace Variant1_OrderProcessing
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            IOrderValidator validator = new OrderValidator();           //ств сервісів
+            IOrderValidator validator = new OrderValidator();   
             IPricingCalculator calculator = new PricingCalculator();
             IInvoiceGenerator invoiceGenerator = new HtmlInvoiceGenerator();
             IOrderRepository repository = new FileOrderRepository();
